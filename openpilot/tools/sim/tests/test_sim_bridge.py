@@ -57,6 +57,14 @@ class TestSimBridgeBase(OpenpilotTestCase):
         no_car_events_issues_once = True
         break
 
+    if not no_car_events_issues_once:
+      details = [
+        (proc.name, proc.exitCode)
+        for proc in sm['managerState'].processes
+        if not proc.running and proc.shouldBeRunning
+      ]
+      print(f"not running process details (name, exitCode): {details}")
+
     assert no_car_events_issues_once, \
                     f"Failed because no messages received, or CarEvents '{car_event_issues}' or processes not running '{not_running}'"
 
