@@ -194,9 +194,8 @@ jobs:
       timeout-minutes: 5
       env:
         METADRIVE_CI: "1"
-        # MetaDrive renders offscreen through panda3d's EGL pipe on llvmpipe
-        EGL_PLATFORM: surfaceless
-      run: ./tools/op.sh test -j 1 -s openpilot/tools/sim/tests/test_metadrive_bridge.py
+        LIBGL_ALWAYS_SOFTWARE: "1"
+      run: xvfb-run -a -s "-screen 0 2160x1440x24" ./tools/op.sh test -j 1 -s openpilot/tools/sim/tests/test_metadrive_bridge.py
 
   create_ui_report:
     name: Create UI Report
