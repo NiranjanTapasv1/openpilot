@@ -182,18 +182,21 @@ jobs:
       (github.event.pull_request.head.repo.full_name == 'commaai/openpilot'))
       && fromJSON('["namespace-profile-amd64-8x16"]')
       || fromJSON('["ubuntu-24.04"]') }}
-    if: false  # FIXME: Started to timeout recently
     steps:
     - uses: actions/checkout@v7
-    - run: ./tools/op.sh setup
+    - name: Setup openpilot with MetaDrive
+      env:
+        INSTALL_METADRIVE: "1"
+      run: ./tools/op.sh setup
     - name: Build openpilot
       run: scons
     - name: Driving test
-      timeout-minutes: 2
+      timeout-minutes: 5
       env:
+        METADRIVE_CI: "1"
         # MetaDrive renders offscreen through panda3d's EGL pipe on llvmpipe
         EGL_PLATFORM: surfaceless
-      run: python openpilot/tools/sim/tests/test_metadrive_bridge.py
+      run: ./tools/op.sh test -j 1 -s openpilot/tools/sim/tests/test_metadrive_bridge.py
 
   create_ui_report:
     name: Create UI Report

@@ -113,6 +113,12 @@ function install_python_deps() {
 
   echo "installing python packages..."
   uv sync --frozen --all-extras
+
+  if [[ -n "${INSTALL_METADRIVE:-}" ]]; then
+    echo "installing MetaDrive simulator..."
+    uv pip install --python "$ROOT/.venv/bin/python" \
+      "metadrive-simulator @ git+https://github.com/commaai/metadrive.git@2716f55a9c7b928ce957a497a15c2c19840c08bc"
+  fi
   source .venv/bin/activate
 }
 
