@@ -85,6 +85,7 @@ def metadrive_process(dual_camera: bool, config: dict, camera_array, wide_camera
   lane_idx_prev = reset()
   start_time = None
   out_of_lane_since = None
+  sim_steps = 0
 
   def get_cam_as_rgb(cam):
     cam = env.engine.sensors[cam]
@@ -123,6 +124,7 @@ def metadrive_process(dual_camera: bool, config: dict, camera_array, wide_camera
         lane_idx_prev = reset()
         start_time = None
         out_of_lane_since = None
+        sim_steps = 0
 
     is_engaged = op_engaged.is_set()
     if is_engaged and start_time is None:
@@ -130,8 +132,13 @@ def metadrive_process(dual_camera: bool, config: dict, camera_array, wide_camera
 
     if rk.frame % 5 == 0:
       _, _, terminated, _, _ = env.step(vc)
+      if start_time is not None:
+         sim_steps += 1
       now = time.monotonic()
       timeout = True if start_time is not None and now - start_time >= test_duration else False
+      if timeout:
+         elapsed = now - start_time
+         print(f"MetaDrive realtime: {sim_steps} steps in {elapsed:.2f}s = {sim_steps / elapsed:.2f} FPS")
       lane_idx_curr, on_lane = get_current_lane_info(env.vehicle)
       raw_out_of_lane = lane_idx_curr != lane_idx_prev or not on_lane
 
