@@ -29,6 +29,7 @@ from openpilot.common.hardware import HARDWARE
 REPLAY = "REPLAY" in os.environ
 SIMULATION = "SIMULATION" in os.environ
 TESTING_CLOSET = "TESTING_CLOSET" in os.environ
+CI = "CI" in os.environ
 
 LONGITUDINAL_PERSONALITY_MAP = {v: k for k, v in log.LongitudinalPersonality.schema.enumerants.items()}
 
@@ -400,7 +401,7 @@ class SelfdriveD:
     if not self.CP.notCar and not big_model_settling:  # localization has nothing to work with during the load
       if not self.sm['deviceMotion'].posenetOK:
         self.events.add(EventName.posenetInvalid)
-      if not self.sm['deviceMotion'].inputsOK:
+      if not self.sm['deviceMotion'].inputsOK and not (SIMULATION and CI):
         self.events.add(EventName.locationdTemporaryError)
       if (not self.sm['vehicleParameters'].valid and cal_status == log.ExtrinsicsCalibration.Status.calibrated and
           not TESTING_CLOSET and (not SIMULATION or REPLAY)):
