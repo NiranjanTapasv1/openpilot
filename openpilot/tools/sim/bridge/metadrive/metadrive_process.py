@@ -155,11 +155,13 @@ def metadrive_process(dual_camera: bool, config: dict, camera_array, wide_camera
 
         if out_of_lane:
           print(
-            f"MetaDrive out_of_lane diagnostic: "
-            f"prev_lane={lane_idx_prev}, curr_lane={lane_idx_curr}, "
-            f"on_lane={on_lane}, position={env.vehicle.position}, "
-            f"speed_km_h={env.vehicle.speed_km_h:.2f}, "
-            f"duration={now - out_of_lane_since:.2f}s"
+            "MetaDrive out_of_lane diagnostic:",
+            f"prev_lane={lane_idx_prev}",
+            f"curr_lane={lane_idx_curr}",
+            f"on_lane={on_lane}",
+            f"position={env.vehicle.position}",
+            f"speed_km_h={env.vehicle.speed_km_h:.2f}",
+            f"duration={now - out_of_lane_since:.2f}s",
           )
       else:
         out_of_lane = raw_out_of_lane
